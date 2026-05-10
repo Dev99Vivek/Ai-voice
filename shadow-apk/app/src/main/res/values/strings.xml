@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SHADOW</string>
+    <string name="accessibility_service_description">SHADOW uses accessibility to automate UI actions: tapping, swiping, typing and navigating apps on your behalf based on voice commands.</string>
+    <string name="notification_channel_name">SHADOW AI</string>
+    <string name="notification_channel_desc">SHADOW is running and listening for your voice</string>
+    <string name="notification_title">SHADOW — Active</string>
+    <string name="notification_text">Listening for "Shadow"…</string>
+</resources>
