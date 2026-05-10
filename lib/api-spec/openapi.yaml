@@ -3,13 +3,17 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: SHADOW AI Assistant API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: apk
+    description: APK version management and downloads
+  - name: analytics
+    description: Download and install analytics
 paths:
   /healthz:
     get:
@@ -24,6 +28,93 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /apk/latest:
+    get:
+      operationId: getLatestApk
+      tags: [apk]
+      summary: Get latest APK info
+      description: Returns info about the latest SHADOW APK release
+      responses:
+        "200":
+          description: Latest APK info
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApkVersion"
+
+  /apk/versions:
+    get:
+      operationId: listApkVersions
+      tags: [apk]
+      summary: List all APK versions
+      description: Returns all available SHADOW APK versions
+      responses:
+        "200":
+          description: List of versions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/ApkVersion"
+
+  /apk/download/{versionId}:
+    get:
+      operationId: getApkDownloadUrl
+      tags: [apk]
+      summary: Get APK download URL
+      description: Returns the download URL for a specific APK version
+      parameters:
+        - name: versionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Download URL
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DownloadUrl"
+        "404":
+          description: Version not found
+
+  /analytics/stats:
+    get:
+      operationId: getDownloadStats
+      tags: [analytics]
+      summary: Get download statistics
+      description: Returns aggregate download and install stats
+      responses:
+        "200":
+          description: Download stats
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DownloadStats"
+
+  /analytics/event:
+    post:
+      operationId: trackEvent
+      tags: [analytics]
+      summary: Track a download or install event
+      description: Records a download or install event for analytics
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventInput"
+      responses:
+        "201":
+          description: Event recorded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EventResult"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +125,110 @@ components:
       required:
         - status
 
+    ApkVersion:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+        versionCode:
+          type: integer
+        releaseDate:
+          type: string
+        sizeBytes:
+          type: integer
+        sizeMb:
+          type: string
+        minAndroidVersion:
+          type: string
+        minAndroidApi:
+          type: integer
+        downloadCount:
+          type: integer
+        changelog:
+          type: array
+          items:
+            type: string
+        isLatest:
+          type: boolean
+        downloadUrl:
+          type: string
+      required:
+        - id
+        - version
+        - versionCode
+        - releaseDate
+        - sizeBytes
+        - sizeMb
+        - minAndroidVersion
+        - minAndroidApi
+        - downloadCount
+        - changelog
+        - isLatest
+        - downloadUrl
+
+    DownloadUrl:
+      type: object
+      properties:
+        url:
+          type: string
+        version:
+          type: string
+        expiresAt:
+          type: ["string", "null"]
+      required:
+        - url
+        - version
+        - expiresAt
+
+    DownloadStats:
+      type: object
+      properties:
+        totalDownloads:
+          type: integer
+        totalInstalls:
+          type: integer
+        activeDevices:
+          type: integer
+        latestVersionDownloads:
+          type: integer
+        downloadsThisWeek:
+          type: integer
+        downloadsThisMonth:
+          type: integer
+      required:
+        - totalDownloads
+        - totalInstalls
+        - activeDevices
+        - latestVersionDownloads
+        - downloadsThisWeek
+        - downloadsThisMonth
+
+    EventInput:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [download, install, uninstall, crash]
+        versionId:
+          type: string
+        platform:
+          type: string
+        userAgent:
+          type: ["string", "null"]
+      required:
+        - type
+        - versionId
+        - platform
+
+    EventResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        eventId:
+          type: string
+      required:
+        - success
+        - eventId

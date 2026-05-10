@@ -1,0 +1,8 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "fEd78fVspkrl4dvLlCM3g"
+uri = "file://artifacts/shadow-mobile/assets/images/icon.png"
+type = "image"
+title = "Dark cyan S app icon"
