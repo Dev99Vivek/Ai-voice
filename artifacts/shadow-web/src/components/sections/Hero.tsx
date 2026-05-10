@@ -51,10 +51,10 @@ export default function Hero() {
         >
           <a
             href="#install"
-            className="px-8 py-4 font-mono font-bold text-background bg-primary hover:bg-primary/90 hover:shadow-[0_0_30px_rgba(0,245,212,0.4)] transition-all flex items-center justify-center gap-2"
+            className="px-8 py-4 font-mono font-bold text-black bg-[#00F5D4] hover:bg-[#00F5D4]/90 hover:shadow-[0_0_30px_rgba(0,245,212,0.4)] transition-all flex items-center justify-center gap-2"
           >
             <Terminal size={18} />
-            INSTALL APK
+            GET SHADOW
           </a>
           <a
             href="#demos"
